@@ -1,0 +1,99 @@
+<style>
+.GR{position:relative;height:420px;overflow:hidden}
+.EV{position:absolute;display:flex;align-items:stretch;overflow:hidden;z-index:2}
+.EL{font-size:9px;white-space:nowrap;flex-shrink:0;padding:0 5px 0 2px;background:#fff;align-self:center;line-height:1}
+.EF{flex:1;align-self:stretch;min-width:8px;box-sizing:border-box;border-radius:0 1px 1px 0}
+.DF{flex:1;display:flex;align-items:center;min-width:8px}
+.DT{width:100%;height:4px;box-sizing:border-box}
+.fs{background:#000}
+.fn{background:#000}
+.fb{background:#fff;border:2px solid #000;box-sizing:border-box}
+.fe{background-color:#fff;background-image:repeating-linear-gradient(135deg,#000 0,#000 2px,#fff 2px,#fff 6px)}
+.fp{background-color:#fff;background-image:repeating-linear-gradient(45deg,#000 0,#000 2px,#fff 2px,#fff 6px)}
+.fx{background-color:#fff;background-image:repeating-linear-gradient(135deg,#000 0,#000 2px,transparent 2px,transparent 6px),repeating-linear-gradient(45deg,#000 0,#000 2px,transparent 2px,transparent 6px)}
+.SH{font-size:19px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;border-bottom:1px solid #555;padding-bottom:2px;margin:22px 0 4px}
+.SR{font-size:23px;margin:2px 0;white-space:nowrap;overflow:hidden;display:flex;align-items:baseline;gap:0.5em}
+.LA{color:#666;min-width:4.4em;flex-shrink:0}
+.TM{display:flex;align-items:baseline;flex-shrink:0}
+.TH{min-width:1.3em;text-align:right;flex-shrink:0}
+</style>
+
+<div class="view view--full">
+  <div style="height:100%;padding:12px 16px;box-sizing:border-box;display:flex;flex-direction:column">
+
+    <div style="font-size:9px;color:#888;text-align:right;margin-bottom:5px">Huckleberry Baby Tracker</div>
+
+    <div style="display:flex;flex:1;min-height:0;overflow:hidden">
+
+      <!-- Left panel: event timeline -->
+      <div style="flex:3;border-right:1px solid #bbb;padding-right:14px;overflow:hidden">
+        <div style="font-size:11px;font-weight:700;margin-bottom:4px">{{date_label}}</div>
+
+        <div class="GR">
+
+          {% for g in gl %}
+            <div style="position:absolute;top:{{g.y}}px;left:0;right:0;pointer-events:none">
+              <span style="position:absolute;left:0;width:32px;font-size:9px;color:#888;text-align:right;padding-right:4px;transform:translateY(-50%)">{{g.l}}</span>
+              <div style="position:absolute;left:32px;right:0;border-top:1px solid #ddd"></div>
+            </div>
+          {% endfor %}
+
+          <div style="position:absolute;top:{{now_y}}px;left:32px;right:0;border-top:2px solid #000;z-index:5;pointer-events:none">
+            <div style="position:absolute;left:-5px;top:-4px;width:7px;height:7px;border-radius:50%;background:#000"></div>
+          </div>
+
+          {% for e in ev %}
+            <div class="EV" style="top:{{e.y}}px;left:{% if e.l %}{{e.l}}{% else %}32px{% endif %};width:{% if e.w %}{{e.w}}{% else %}calc(100% - 32px){% endif %};height:{{e.h}}px">
+              <span class="EL">{{e.d}}</span>
+              {% if e.k == "D" %}
+                <div class="DF"><div class="DT {{e.c}}"></div></div>
+              {% else %}
+                <div class="EF {{e.c}}"></div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+        </div>
+      </div>
+
+      <!-- Right panel: last feeding / diaper / sleep -->
+      <div style="flex:2;padding-left:12px">
+
+        <div class="SH" style="margin-top:0">Last Feeding</div>
+        {% for f in feed %}
+          {% if f.th %}
+            <div class="SR">
+              <span class="LA">{{f.n}}</span>
+              <span class="TM"><span class="TH">{{f.th}}</span>{{f.tm}}</span>
+              {% if f.v %}<b>{{f.v}}</b>{% endif %}
+            </div>
+          {% else %}
+            <div class="SR" style="color:#aaa">{{f.n}} —</div>
+          {% endif %}
+        {% endfor %}
+
+        <div class="SH">Last Diaper</div>
+        {% for d in dpr %}
+          {% if d.th %}
+            <div class="SR">
+              <span class="LA">{{d.n}}</span>
+              <span class="TM"><span class="TH">{{d.th}}</span>{{d.tm}}</span>
+            </div>
+          {% else %}
+            <div class="SR" style="color:#aaa">{{d.n}} —</div>
+          {% endif %}
+        {% endfor %}
+
+        <div class="SH">Last Sleep</div>
+        {% for s in slp %}
+          {% if s.t %}
+            <div class="SR">{{s.t}}{% if s.v %} <b>{{s.v}}</b>{% endif %}</div>
+          {% else %}
+            <div class="SR" style="color:#aaa">—</div>
+          {% endif %}
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+[project]
+name = "trmnl-huckleberry"
+version = "0.1.0"
+description = "TRMNL private plugin for Huckleberry baby tracking"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "aiohttp>=3.10.0",
+    "python-dotenv>=1.0.0",
+    "huckleberry-api>=0.4.3",
+    "python-liquid>=2.2.0",
+]

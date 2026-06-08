@@ -1,0 +1,13 @@
+services:
+  trmnl-huckleberry:
+    image: ghcr.io/srwareham/trmnl-huckleberry:latest
+    environment:
+      # ----------- REQUIRED CHANGE THESE -------
+      HUCKLEBERRY_EMAIL: you@example.com
+      HUCKLEBERRY_PASSWORD: yourpassword
+      TRMNL_WEBHOOK_URL: https://trmnl.com/api/custom_plugins/YOUR_PLUGIN_UUID
+      # ----------- OPTIONAL TO CHANGE ----------
+      TIMEZONE: America/Los_Angeles
+      # HUCKLEBERRY_CHILD_UID: your-child-uid  # required only if account has multiple children
+      # PUSH_INTERVAL_SECS: 900  # default 15 min; TRMNL caps to 12/hour
+    restart: unless-stopped
