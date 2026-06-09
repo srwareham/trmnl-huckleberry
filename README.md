@@ -20,7 +20,7 @@ A chronological calendar of today's events. Before noon, shows from 9:00 PM the 
 
 **Right — Last events**
 
-- **Last Feeding** — most recent left nurse, right nurse, and bottle, each with time and detail
+- **Last Feeding** — most recent left breast, right breast, and bottle, each with time and detail
 - **Last Diaper** — most recent poo and most recent pee tracked separately
 - **Last Sleep** — start time, end time, and total duration
 
@@ -37,14 +37,12 @@ To use this plugin you need to create a private plugin using (requires the [BYOD
 
 ### 2. Configure and run
 
-Edit `docker-compose.yml` and fill in your credentials directly:
+Create a `docker-compose.yml` and fill in your credentials directly:
 
 ```yaml
 services:
   trmnl-huckleberry:
     image: ghcr.io/srwareham/trmnl-huckleberry:latest
-    ports:
-      - "8080:8080"
     environment:
       HUCKLEBERRY_EMAIL: you@example.com
       HUCKLEBERRY_PASSWORD: yourpassword
@@ -95,10 +93,10 @@ Useful flags:
 
 | Flag | Description | Example |
 |------|-------------|---------|
-| `--run-webserver` | Start a local web UI at `http://localhost:8080`t that will let you preview the output | `uv run python main.py --run-webserver` |
+| `--run-webserver` | Start a local web UI at `http://localhost:8080` that will let you preview the output | `uv run python main.py --run-webserver` |
 | `--no-push` | Skip pushing to TRMNL's servers (useful to avoid rate limits while testing) | `uv run python main.py --no-push` |
 | `--dummy-data` | Use built-in sample data — no credentials needed | `uv run python main.py --dummy-data --no-push` |
-| `--dump-payload` | Print the webhook JSON payload to stdout and exit. Useful for understanding what data is being fetched from Buckleberry | `uv run python main.py --dump-payload --dummy-data` |
+| `--dump-payload` | Print the webhook JSON payload to stdout and exit. Useful for understanding what data is being fetched from Huckleberry | `uv run python main.py --dump-payload --dummy-data` |
 
 
 ### Local build with Docker Compose
