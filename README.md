@@ -109,22 +109,34 @@ Instead of using the published image you can create your own by running
 services:
   trmnl-huckleberry:
     build: .
-    # Expose ports to have access to the local webserver for testing
-    ports:
-      - "8080:8080"
     env_file: .env
     restart: unless-stopped
 ```
 
 Followed by running `docker compose up --build`
 
-Alternatively, you can just use docker without docker compose, for example enabling debugging parameters for quick iteration without risking rate limiting.
+To also enable the local web UI, add `--run-webserver` via the `command` key and expose the port:
 
-`docker build -t trmnl-huckleberry:local . && docker run --rm -e DUMMY_DATA=1 -e NO_PUSH=1 -p 8080:8080 trmnl-huckleberry:local`
+```yaml
+services:
+  trmnl-huckleberry:
+    build: .
+    command: --run-webserver
+    ports:
+      - "8080:8080"
+    env_file: .env
+    restart: unless-stopped
+```
+
+Alternatively, you can use docker directly. For example, to iterate quickly without risking rate limiting:
+
+```sh
+docker build -t trmnl-huckleberry:local . && docker run --rm -e DUMMY_DATA=1 -e NO_PUSH=1 -p 8080:8080 trmnl-huckleberry:local --run-webserver
+```
 
 ### Local web server
 
-When running, the service exposes a local web UI at `http://localhost:8080`:
+Pass `--run-webserver` (or set it via `command:` in docker-compose) to start the local web UI at `http://localhost:8080`:
 
 | Route | Description |
 |-------|-------------|

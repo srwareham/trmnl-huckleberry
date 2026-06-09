@@ -13,5 +13,5 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8080
 
-# Run uvicorn directly so reload=True (dev-only) in __main__ is bypassed
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Default: push-only service. Pass --run-webserver to also start the local web UI.
+ENTRYPOINT ["python", "main.py"]
