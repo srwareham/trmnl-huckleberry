@@ -97,8 +97,8 @@ def _dummy_data() -> dict[str, Any]:
         SimpleNamespace(start=ts(1, 15), mode="bottle", leftDuration=0, rightDuration=0,   amount=30,  units="ml", bottleType="Breast Milk"),
         SimpleNamespace(start=ts(3,  9), mode="bottle", leftDuration=0, rightDuration=0,   amount=110, units="ml", bottleType="Breast Milk"),
         SimpleNamespace(start=ts(5, 20), mode="bottle", leftDuration=0, rightDuration=0,   amount=80,  units="ml", bottleType="Breast Milk"),
-        SimpleNamespace(start=ts(8, 25), mode="nurse", leftDuration=0, rightDuration=1140, amount=0,  units="oz", bottleType=""),
-        SimpleNamespace(start=ts(9,  8), mode="nurse", leftDuration=540, rightDuration=0,  amount=0,  units="oz", bottleType=""),
+        SimpleNamespace(start=ts(8, 25), mode="breast", leftDuration=0, rightDuration=1140, amount=0,  units="oz", bottleType=""),
+        SimpleNamespace(start=ts(9,  8), mode="breast", leftDuration=540, rightDuration=0,  amount=0,  units="oz", bottleType=""),
     ]
     cal_diapers = [
         SimpleNamespace(start=ts(0, 46), mode="both"),
@@ -222,7 +222,7 @@ def build_calendar_events(data: dict[str, Any]) -> list[dict]:
             if f.bottleType not in ("Formula", "Breast Milk"):
                 desc += f" ({f.bottleType})"
             sub, duration_s = "bottle", 0.0
-        elif f.mode == "nurse":
+        elif f.mode == "breast":
             total_s = float((f.leftDuration or 0) + (f.rightDuration or 0))
             side_parts = []
             if f.leftDuration:
@@ -230,11 +230,11 @@ def build_calendar_events(data: dict[str, Any]) -> list[dict]:
             if f.rightDuration:
                 side_parts.append(f"R:{fmt_dur(f.rightDuration)}")
             if total_s and side_parts:
-                desc = f"Nurse {fmt_dur(total_s)}  ({' • '.join(side_parts)})"
+                desc = f"Breast {fmt_dur(total_s)}  ({' • '.join(side_parts)})"
             elif side_parts:
-                desc = "Nurse " + " • ".join(side_parts)
+                desc = "Breast " + " • ".join(side_parts)
             else:
-                desc = "Nurse"
+                desc = "Breast"
             sub = "nursing"
             duration_s = total_s
         else:
@@ -268,12 +268,12 @@ def get_last_feedings(data: dict[str, Any]) -> list[dict]:
 
     for f in sorted(data["stat_feeds"], key=lambda f: f.start, reverse=True):
         dt = sec_to_dt(f.start, tz)
-        if f.mode == "nurse":
+        if f.mode == "breast":
             if found["left"] is None and f.leftDuration:
-                found["left"] = {"label": "L. Nurse", "time": fmt_time_full(dt),
+                found["left"] = {"label": "L. Breast", "time": fmt_time_full(dt),
                                   "detail": fmt_dur(f.leftDuration), "_ts": float(f.start)}
             if found["right"] is None and f.rightDuration:
-                found["right"] = {"label": "R. Nurse", "time": fmt_time_full(dt),
+                found["right"] = {"label": "R. Breast", "time": fmt_time_full(dt),
                                    "detail": fmt_dur(f.rightDuration), "_ts": float(f.start)}
         elif f.mode == "bottle" and found["bottle"] is None:
             ml = float(f.amount) * (29.5735 if f.units == "oz" else 1)
@@ -283,7 +283,7 @@ def get_last_feedings(data: dict[str, Any]) -> list[dict]:
             break
 
     rows = []
-    for key, label in [("left", "L. Nurse"), ("right", "R. Nurse"), ("bottle", "Bottle")]:
+    for key, label in [("left", "L. Breast"), ("right", "R. Breast"), ("bottle", "Bottle")]:
         rows.append(found[key] or {"label": label, "time": None, "detail": None, "_ts": None})
 
     # Oldest at top, newest at bottom; missing entries sort before any real event
